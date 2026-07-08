@@ -63,7 +63,9 @@ async def run_evaluation_worker(session_factory) -> None:
 
 
 class ReActAgent:
-    def __init__(self, session_id: str, db: AsyncSession, idempotency_key: Optional[str] = None):
+    def __init__(
+        self, session_id: str, db: AsyncSession, idempotency_key: Optional[str] = None
+    ):
         self.session_id = session_id
         self.db = db
         self.idempotency_key = idempotency_key
@@ -172,13 +174,13 @@ class ReActAgent:
 
             return {
                 "thought": "I have collected enough context and am ready to respond to the user.",
-                "final_answer": ans
+                "final_answer": ans,
             }
 
         # Fallback default decision if no conditions match
         return {
             "thought": "No specific tools required for this request. Answering directly.",
-            "final_answer": "I am ready to assist. Please ask a specific query like 'run command: ls' or 'query rag: postgres'."
+            "final_answer": "I am ready to assist. Please ask a specific query like 'run command: ls' or 'query rag: postgres'.",
         }
 
     async def execute_react_loop(

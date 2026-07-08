@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Optional, Any
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class MessageCreate(BaseModel):
@@ -9,14 +9,13 @@ class MessageCreate(BaseModel):
 
 
 class MessageResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     session_id: str
     role: str
     content: str
     created_at: datetime
-
-    class Config:
-        from_attributes = True
 
 
 class SessionCreate(BaseModel):
@@ -25,14 +24,13 @@ class SessionCreate(BaseModel):
 
 
 class SessionResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     created_at: datetime
     updated_at: datetime
     meta: Optional[dict]
     messages: List[MessageResponse] = []
-
-    class Config:
-        from_attributes = True
 
 
 class ChatRequest(BaseModel):
@@ -43,6 +41,8 @@ class ChatRequest(BaseModel):
 
 
 class ToolCallResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     task_id: str
     tool_name: str
@@ -52,11 +52,10 @@ class ToolCallResponse(BaseModel):
     duration: Optional[float]
     created_at: datetime
 
-    class Config:
-        from_attributes = True
-
 
 class EvaluationResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     task_id: str
     metric_name: str
@@ -64,11 +63,10 @@ class EvaluationResponse(BaseModel):
     details: Optional[dict]
     created_at: datetime
 
-    class Config:
-        from_attributes = True
-
 
 class TaskResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     session_id: str
     status: str
@@ -76,6 +74,3 @@ class TaskResponse(BaseModel):
     created_at: datetime
     tool_calls: List[ToolCallResponse] = []
     evaluations: List[EvaluationResponse] = []
-
-    class Config:
-        from_attributes = True

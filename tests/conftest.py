@@ -1,4 +1,7 @@
+# 测试配置：在导入 app 之前先覆盖设置，再替换 Redis 为 Mock
+
 import pytest
+import app.redis  # noqa: E402
 from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from httpx import AsyncClient, ASGITransport
@@ -7,9 +10,6 @@ from httpx import AsyncClient, ASGITransport
 from app.config import settings
 
 settings.DATABASE_URL = "sqlite+aiosqlite:///:memory:"
-
-# Mock Redis manager
-from app.redis import redis_manager
 
 
 class MockRedisPipeline:
@@ -81,15 +81,13 @@ class MockRedisManager:
         return self.client
 
 
-# Replace real Redis with Mock
+# Replace real Redis with Mock（在导入 app.main 之前完成替换）
 mock_redis = MockRedisManager()
-import app.redis
-
 app.redis.redis_manager = mock_redis
 
 # Now import the app
-from app.main import app as fastapi_app
-from app.database import Base
+from app.main import app as fastapi_app  # noqa: E402
+from app.database import Base  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
